@@ -53,6 +53,9 @@ Route::prefix('v1')
                       Route::get('catalog/index', 'PmsCatalogController@index')->name('pms_catalog.index');
                       // 发送手机注册短信
                       Route::post('auth/regCaptcha', 'AuthController@regCaptcha')->name('auth.regCaptcha');
+
+                      Route::get('coupon/list', 'SmsCouponController@index')->name('sms_coupon.index');
+
                   });
 
                   // 登录后可以访问的接口

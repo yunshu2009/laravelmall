@@ -3,6 +3,7 @@
 namespace App\Business;
 
 use App\Constants\SmsCouponConstant;
+use App\Helper\CommonResult;
 use App\Models\Mysql\SmsCoupon;
 use App\Models\Mysql\SmsCouponUser;
 
@@ -12,20 +13,28 @@ class SmsCouponBusiness extends BaseBusiness
 
     public static function queryList($page, $limit, $sort='created_at', $order='desc')
     {
-        $query = SmsCoupon::query();
-
-        return self::getList($query, $page, $limit, $sort, $order);
+        return SmsCoupon::query()
+                      ->where('type', SmsCouponConstant::TYPE_COMMON)
+                      ->where('status', SmsCouponConstant::STATUS_NORMAL)
+                      ->orderBy($sort, $order)
+                      ->forPage($page, $limit)
+                      ->select(self::$select)
+                      ->get()
+                      ->toArray();
     }
 
-    public static function getList($query, $page, $limit, $sort='created_at', $order='desc')
+    public static function getList($page, $limit, $sort='created_at', $order='desc')
     {
-        return $query->where('type', SmsCouponConstant::TYPE_COMMON)
-                     ->where('status', SmsCouponConstant::STATUS_NORMAL)
-                     ->orderBy($sort, $order)
-                     ->forPage($page, $limit)
-                     ->select(self::$select)
-                     ->get()
-                     ->toArray();
+        $count = SmsCoupon::query()
+                          ->where('type', SmsCouponConstant::TYPE_COMMON)
+                          ->where('status', SmsCouponConstant::STATUS_NORMAL)
+                          ->count();
+
+        $list = self::getList($page, $limit, $sort, $order);
+
+        $page = CommonResult::formatPaged($page, $limit, $count);
+
+        return CommonResult::formatBody(array_merge($page, ['list'=>$list]));
     }
 
     public static function queryListByUid($uid, $page, $limit, $sort='created_at', $order='desc')
