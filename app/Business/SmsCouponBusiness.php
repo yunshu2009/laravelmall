@@ -30,8 +30,7 @@ class SmsCouponBusiness extends BaseBusiness
                           ->where('status', SmsCouponConstant::STATUS_NORMAL)
                           ->count();
 
-        $list = self::getList($page, $limit, $sort, $order);
-
+        $list = self::queryList($page, $limit, $sort, $order);
         $page = CommonResult::formatPaged($page, $limit, $count);
 
         return CommonResult::formatBody(array_merge($page, ['list'=>$list]));
@@ -42,9 +41,14 @@ class SmsCouponBusiness extends BaseBusiness
         $couponIds = SmsCouponUser::where('user_id', $uid)
                                 ->pluck('coupon_id');
 
-        $query = SmsCoupon::query()->where('id', $couponIds);
-
-        return self::getList($query, $page, $limit, $sort, $order);
+        return SmsCoupon::query()->where('id', $couponIds)
+                                    ->where('type', SmsCouponConstant::TYPE_COMMON)
+                                    ->where('status', SmsCouponConstant::STATUS_NORMAL)
+                                    ->orderBy($sort, $order)
+                                    ->forPage($page, $limit)
+                                    ->select(self::$select)
+                                    ->get()
+                                    ->toArray();
     }
 
     public static function queryRegister()
