@@ -16,4 +16,9 @@ class SmsCouponUser extends BaseModel
         'order_id',
         'deleted'
     ];
+
+    public function coupon()
+    {
+        return $this->belongsTo(SmsCoupon::class, 'coupon_id', 'id');
+    }
 }

@@ -53,9 +53,8 @@ Route::prefix('v1')
                       Route::get('catalog/index', 'PmsCatalogController@index')->name('pms_catalog.index');
                       // 发送手机注册短信
                       Route::post('auth/regCaptcha', 'AuthController@regCaptcha')->name('auth.regCaptcha');
-
+                      // 优惠券列表
                       Route::get('coupon/list', 'SmsCouponController@index')->name('sms_coupon.index');
-
                   });
 
                   // 登录后可以访问的接口
@@ -65,6 +64,8 @@ Route::prefix('v1')
                       Route::get('order/list', 'OmsOrderController@index')->name('order.index');
                       // 添加至购物车
                       Route::post('cart/add', 'OmsCartController@add')->name('oms_cart.add');
+                      // 我的优惠券
+                      Route::get('coupon/mylist', 'SmsCouponController@myList')->name('sms_coupon.mylist');
                   });
               });
          //

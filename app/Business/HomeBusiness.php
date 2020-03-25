@@ -20,7 +20,7 @@ class HomeBusiness extends BaseBusiness
         $content['banner'] = CmsAdBusiness::queryIndex();
         $content['channel'] = PmsGoodsCategoryBusiness::queryChannel();
         if (! $uid) {
-            $content['couponList'] = SmsCouponBusiness::queryList(1, 3);
+            $content['couponList'] = SmsCouponBusiness::queryHomeList(1, 3);
         } else {
             $content['couponList'] = SmsCouponBusiness::queryListByUid($uid, 1, 3);
         }

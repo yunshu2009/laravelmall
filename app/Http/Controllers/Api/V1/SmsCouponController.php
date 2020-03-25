@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Business\SmsCouponBusiness;
+use App\Business\SmsCouponUserBusiness;
 use App\Helper\ResponseUtil;
 use App\Http\Controllers\Api\ApiController;
 
@@ -12,8 +13,26 @@ class SmsCouponController extends ApiController
     public function index()
     {
         $rules = [
-            'page'            => 'integer|min:1',
-            'limit'           => 'required_with:page|integer|min:1',
+            'page'            => 'required|integer|min:1',
+            'limit'           => 'required|integer|min:1',
+            'sort'            =>  'string|min:1',
+            'order'           =>  'string|min:1'
+        ];
+
+        if ($error = $this->validateInput($rules)) {
+            return $error;
+        }
+
+        $res = SmsCouponBusiness::getList($this->validated);
+
+        return ResponseUtil::json($res);
+    }
+
+    public function myList()
+    {
+        $rules = [
+            'page'            => 'required|integer|min:1',
+            'limit'           => 'required|integer|min:1',
             'sort'            =>  'string|min:1',
             'order'           =>  'string|min:1'
         ];
@@ -23,10 +42,9 @@ class SmsCouponController extends ApiController
         }
 
         $validated = $this->validated;
-        $validated['page'] = isset($validated['page']) ? $validated['page'] : 1;
-        $validated['limit'] = isset($validated['limit']) ? $validated['limit'] : 10;
-
-        $res = SmsCouponBusiness::getList($validated['page'], $validated['limit']);
+        $validated['userId'] = $this->uid;
+        //$validated['userId'] = 4;
+        $res = SmsCouponUserBusiness::getMyList($validated);
 
         return ResponseUtil::json($res);
     }

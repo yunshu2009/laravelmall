@@ -9,6 +9,10 @@ class CommonResult
 {
     public static function formatPaged($page, $size, $total)
     {
+        $page = (int)$page;
+        $size = (int)$size;
+        $total = (int)$total;
+
         return [
             'total' => $total,   // 总条数
             'page' => $page,
