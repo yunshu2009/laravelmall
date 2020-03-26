@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helper\Token;
 use App\Http\Controllers\Controller;
 
 class ApiController extends Controller
@@ -12,6 +13,11 @@ class ApiController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->uid = $this->request['uid'] ?? 0;
+        // todo：完善
+//        $this->uid = $this->request->userId ?? 0;
+        $token = Token::authorization();
+        if (is_int($token)) {
+            $this->uid = $token;
+        }
     }
 }

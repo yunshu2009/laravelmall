@@ -21,6 +21,26 @@ class PmsCollectController extends ApiController
         $validated = $this->validated;
         $validated['userId'] = $this->uid;
 
-        return ResponseUtil::json(PmsCollectBusiness::addOrDelete($validated));
+        $res = PmsCollectBusiness::addOrDelete($validated);
+        return ResponseUtil::json($res);
+    }
+
+    public function index()
+    {
+        $rules = [
+            'type'            => 'required|integer|min:0',
+            'page'            => 'required|integer|min:1',
+            'limit'           => 'required|integer|min:1',
+        ];
+
+        if ($error = $this->validateInput($rules)) {
+            return $error;
+        }
+
+        $validated = $this->validated;
+        $validated['userId'] = $this->uid;
+        $res = PmsCollectBusiness::getList($validated);
+
+        return ResponseUtil::json($res);
     }
 }

@@ -31,7 +31,7 @@ class TokenAuthenticate
             return ResponseUtil::json($body);
         }
 
-        $request->merge(['userId'=>$token]);
+        $request->offsetSet('userId', $token);
 
         return $next($request);
     }

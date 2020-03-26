@@ -53,7 +53,7 @@ class UmsMemberBusiness extends BaseBusiness
             $model->save();
 
             // 生成 jwt
-            $token = Token::encode(['uid' => $model->user_id]);
+            $token = Token::encode(['uid' => $model->id]);
             $body = [
                 'token' =>  $token,
                 'userInfo'  =>  [

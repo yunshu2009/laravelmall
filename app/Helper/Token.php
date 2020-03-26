@@ -126,9 +126,12 @@ class Token
             $token = app('request')->get('X-'.config('app.name').'-Token');
         }
 
+        if (empty($token)) {
+            return false;
+        }
+
         // Log::debug('Authorization', ['token' => $token]);
         if ($payload = self::decode($token)) {
-            // Log::debug('payload', ['payload' => $payload]);
             if (is_object($payload) && property_exists($payload, 'uid')) {
                 return $payload->uid;
             }

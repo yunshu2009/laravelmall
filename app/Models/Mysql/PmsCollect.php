@@ -10,4 +10,14 @@ class PmsCollect extends BaseModel
         'user_id',
         'value_id'
     ];
+
+    public function goods()
+    {
+        return $this->belongsTo(PmsGoods::class, 'value_id', 'id');
+    }
+
+    public function topic()
+    {
+        return $this->belongsTo(SmsTopic::class, 'value_id', 'id');
+    }
 }
