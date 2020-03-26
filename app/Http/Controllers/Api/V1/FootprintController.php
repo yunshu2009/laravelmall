@@ -22,8 +22,8 @@ class FootprintController extends ApiController
 
         $validated = $this->validated;
         $validated['userId'] = $this->uid;
-        $validated['userId'] = 4;
-        $res = FootprintBusiness::getList($this->validated);
+//        $validated['userId'] = 4;
+        $res = FootprintBusiness::getList($validated);
 
         return ResponseUtil::json($res);
     }

@@ -8,6 +8,6 @@ class Footprint extends BaseModel
 
     public function goods()
     {
-        return $this->belongsTo(PmsGoods::class, 'id', 'goods_id');
+        return $this->belongsTo(PmsGoods::class, 'goods_id', 'id');
     }
 }

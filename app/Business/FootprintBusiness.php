@@ -16,7 +16,7 @@ class FootprintBusiness extends BaseBusiness
         ];
         $with = [
             'goods' =>  function($query) {
-                $query->select(['name','brief', 'pic_url', 'retail_price']);
+                $query->select(['id', 'name','brief', 'pic_url', 'retail_price']);
             }
         ];
 
@@ -24,7 +24,22 @@ class FootprintBusiness extends BaseBusiness
         $count = self::queryCountByCondition($condition);
         $page = CommonResult::formatPaged($attributes['page'], $attributes['limit'], $count);
 
-        return CommonResult::formatBody(array_merge($page, ['list'=>$list]));
+        $footprintList = [];
+        if ($list) {
+            foreach ($list as $vo) {
+                $footprintList[] = [
+                    'id'    =>  $vo['id'],
+                    'created_at'  =>  $vo['created_at'],
+                    'goods_id'  =>  $vo['goods_id'],
+                    'name'  =>  $vo['goods']['name'],
+                    'brief'  =>  $vo['goods']['brief'],
+                    'pic_url'  =>  $vo['goods']['pic_url'],
+                    'retail_price'  =>  $vo['goods']['retail_price'],
+                ];
+            }
+        }
+
+        return CommonResult::formatBody(array_merge($page, ['list'=>$footprintList]));
     }
 
     protected static function queryListByCondition($page, $limit, $condition=[], $sort='created_at', $order='desc', $select='', $with=[])
