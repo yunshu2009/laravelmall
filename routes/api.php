@@ -68,6 +68,8 @@ Route::prefix('v1')
                       Route::get('coupon/mylist', 'SmsCouponController@myList')->name('sms_coupon.mylist');
                       // 收藏列表
                       Route::get('collect/list', 'PmsCollectController@index')->name('pms_collect.index');
+                     // 足迹列表
+                      Route::get('footprint/list', 'FootprintController@index')->name('foot_print.index');
                   });
               });
          //
