@@ -4,33 +4,37 @@ namespace App\Business;
 
 use App\Helper\CommonResult;
 use App\Models\Mysql\SmsGroupon;
-use phpDocumentor\Reflection\Types\Self_;
 
 class SmsGrouponBusiness extends BaseBusiness
 {
-    protected static $select = ['groupon_id', 'rule_id', 'user_id', 'status'];
+    protected static $select = ['order_id', 'groupon_id', 'rule_id', 'user_id', 'status'];
 
     public static function myList(array $validated)
     {
         $validated['showType'] = in_array($validated['showType'],[0, 1]) ? $validated['showType'] : 0;
+        $page = $validated['page'] ?? 1;
+        $limit = $validated['limit'] ?? 10;
 
         // 测试
         $validated['userId'] = 7;
 
         if ($validated['showType'] == 0) {
-            $list = self::queryMyGroupon($validated['userId'], 1, 10);
+            $res = self::queryMyGroupon($validated['userId'], $page, $limit);
         } else {
-            $list = self::queryJoinGroupon($validated['userId'], 1, 10);
+            $res = self::queryJoinGroupon($validated['userId'], $page, $limit);
         }
 
+//        if ($res) {
+//            foreach ($list as $vo) {
+//
+//            }
+//        }
 
-        if ($list) {
-            foreach ($list as $vo) {
+        $count = $res[1] ?? 0;
+        $page = CommonResult::formatPaged($page, $limit,  $count);
+        $list = $res[0] ?? [];
 
-            }
-        }
-
-        return CommonResult::formatBody($list);
+        return CommonResult::formatBody(array_merge(['list'=>$list], $page));
     }
 
     // 用户发起的团购
@@ -42,8 +46,13 @@ class SmsGrouponBusiness extends BaseBusiness
             ['groupon_id', 0],
             ['status', '<>', \App\Constants\SmsGrouponConstant::STATUS_NONE],
         ];
+        $with = [
+            'order' =>  function($query) {
+                $query->select('id','order_sn');
+            }
+        ];
 
-        $list = self::queryListByCondition($page, $limit, $condition);
+        $list = self::queryListByCondition($page, $limit, $condition, 'created_at', 'desc', '', $with);
         $count = self::queryCountByCondition($condition);
 
         return [
@@ -59,8 +68,13 @@ class SmsGrouponBusiness extends BaseBusiness
             ['groupon_id','<>', 0],
             ['status', '<>', \App\Constants\SmsGrouponConstant::STATUS_NONE],
         ];
+        $with = [
+            'order' =>  function($query) {
+                $query->select('id','order_sn');
+            }
+        ];
 
-        $list = self::queryListByCondition($page, $limit, $condition);
+        $list = self::queryListByCondition($page, $limit, $condition, 'created_at', 'desc', '', $with);
         $count = self::queryCountByCondition($condition);
 
         return [
@@ -69,17 +83,21 @@ class SmsGrouponBusiness extends BaseBusiness
         ];
     }
 
-    protected static function queryListByCondition($page, $limit, $condition=[], $sort='created_at', $order='desc', $select='')
+    protected static function queryListByCondition($page, $limit, $condition=[], $sort='created_at', $order='desc', $select='', $with=[])
     {
         $select = $select ? $select : self::$select;
 
-        return SmsGroupon::query()
-                        ->where($condition)
-                        ->orderBy($sort, $order)
-                        ->forPage($page, $limit)
-                        ->select($select)
-                        ->get($select)
-                        ->toArray();
+        $query = SmsGroupon::query();
+        if ($with) {
+            $query = $query->with($with);
+        }
+
+        return $query->where($condition)
+                ->orderBy($sort, $order)
+                ->forPage($page, $limit)
+                ->select($select)
+                ->get($select)
+                ->toArray();
     }
 
     protected static function queryCountByCondition($condition)

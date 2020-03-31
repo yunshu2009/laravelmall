@@ -8,7 +8,7 @@ class SmsGroupon extends BaseModel
 
     public function order()
     {
-        return $this->hasMany(OmsOrder::class, 'order_id', 'id');
+        return $this->belongsTo(OmsOrder::class, 'order_id', 'id');
     }
 
     public function rule()
