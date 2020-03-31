@@ -13,6 +13,6 @@ class SmsGroupon extends BaseModel
 
     public function rule()
     {
-//        return $this->
+        return $this->hasOne(SmsGrouponRules::class, 'id', 'rule_id');
     }
 }

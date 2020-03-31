@@ -49,6 +49,9 @@ class SmsGrouponBusiness extends BaseBusiness
         $with = [
             'order' =>  function($query) {
                 $query->select('id','order_sn');
+            },
+            'rule'  =>  function($query) {
+                $query->select('*');
             }
         ];
 
@@ -71,6 +74,9 @@ class SmsGrouponBusiness extends BaseBusiness
         $with = [
             'order' =>  function($query) {
                 $query->select('id','order_sn');
+            },
+            'rule'  =>  function($query) {
+                $query->select('*');
             }
         ];
 
