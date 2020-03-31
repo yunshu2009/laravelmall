@@ -70,6 +70,8 @@ Route::prefix('v1')
                       Route::get('collect/list', 'PmsCollectController@index')->name('pms_collect.index');
                      // 足迹列表
                       Route::get('footprint/list', 'FootprintController@index')->name('foot_print.index');
+                      // 我的团购
+                      Route::get('groupon/my', 'SmsGrouponController@myList')->name('sms_groupon.my');
                   });
               });
          //
