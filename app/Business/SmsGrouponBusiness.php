@@ -2,12 +2,13 @@
 
 namespace App\Business;
 
+use App\Constants\OmsOrderConstant;
 use App\Helper\CommonResult;
 use App\Models\Mysql\SmsGroupon;
 
 class SmsGrouponBusiness extends BaseBusiness
 {
-    protected static $select = ['order_id', 'groupon_id', 'rule_id', 'user_id', 'status'];
+    protected static $select = ['id', 'order_id', 'groupon_id', 'rule_id', 'user_id', 'creator_user_id', 'status'];
 
     public static function myList(array $validated)
     {
@@ -24,17 +25,54 @@ class SmsGrouponBusiness extends BaseBusiness
             $res = self::queryJoinGroupon($validated['userId'], $page, $limit);
         }
 
-//        if ($res) {
-//            foreach ($list as $vo) {
-//
-//            }
-//        }
-
         $count = $res[1] ?? 0;
-        $page = CommonResult::formatPaged($page, $limit,  $count);
         $list = $res[0] ?? [];
 
-        return CommonResult::formatBody(array_merge(['list'=>$list], $page));
+        $couponList = [];
+        if ($list) {
+            foreach ($list as $vo) {
+                $grouponVo = [];
+                // 团购信息
+                $grouponVo['id'] = $vo['id'];
+                $grouponVo['groupon'] = $vo;
+                $grouponVo['rules'] = $vo['rule'];
+                $grouponVo['creator'] = $vo['creator']['nickname'];
+                if ($vo['groupon_id'] == 0) {   // 团购发起记录
+                    $linkGrouponId = $vo['id'];
+                    $grouponVo['creator'] = ($vo['creator']['id'] == $validated['userId']);
+                } else {
+                    $linkGrouponId = $vo['groupon_id'];
+                    $grouponVo['creator'] = false;
+                }
+                $joinCount = self::countJoin($linkGrouponId);
+                $grouponVo['joinerCount'] = $joinCount;
+
+                // 订单信息
+                $grouponVo['orderId'] = $vo['order']['id'];
+                $grouponVo['orderSn'] = $vo['order']['order_sn'];
+                $grouponVo['actualPrice'] = $vo['order']['actual_price'];
+//                $grouponVo['orderStatusText'] = OmsOrderConstant::getText($vo['order']['status']);
+
+                // 商品信息
+                $couponList[] = $grouponVo;
+            }
+        }
+
+
+        $page = CommonResult::formatPaged($page, $limit,  $count);
+
+        return CommonResult::formatBody(array_merge(['list'=>$couponList], $page));
+    }
+
+    public static function countJoin($grouponId)
+    {
+        $condition = [
+            ['groupon_id', $grouponId],
+            ['groupon_id', 0],
+            ['status', '<>', \App\Constants\SmsGrouponConstant::STATUS_NONE],
+        ];
+
+        return self::queryCountByCondition($condition);
     }
 
     // 用户发起的团购
@@ -48,9 +86,12 @@ class SmsGrouponBusiness extends BaseBusiness
         ];
         $with = [
             'order' =>  function($query) {
-                $query->select('id','order_sn');
+                $query->select('*');
             },
             'rule'  =>  function($query) {
+                $query->select('*');
+            },
+            'creator'   =>  function($query) {
                 $query->select('*');
             }
         ];
@@ -76,6 +117,9 @@ class SmsGrouponBusiness extends BaseBusiness
                 $query->select('id','order_sn');
             },
             'rule'  =>  function($query) {
+                $query->select('*');
+            },
+            'creator'   =>  function($query) {
                 $query->select('*');
             }
         ];
