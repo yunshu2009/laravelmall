@@ -2,9 +2,9 @@
 
 namespace App\Business;
 
-use App\Constants\OmsOrderConstant;
 use App\Helper\CommonResult;
 use App\Models\Mysql\SmsGroupon;
+use Illuminate\Support\Arr;
 
 class SmsGrouponBusiness extends BaseBusiness
 {
@@ -34,7 +34,7 @@ class SmsGrouponBusiness extends BaseBusiness
                 $grouponVo = [];
                 // 团购信息
                 $grouponVo['id'] = $vo['id'];
-                $grouponVo['groupon'] = $vo;
+                $grouponVo['groupon'] = Arr::except($vo, ['order', 'rule', 'creator']);
                 $grouponVo['rules'] = $vo['rule'];
                 $grouponVo['creator'] = $vo['creator']['nickname'];
                 if ($vo['groupon_id'] == 0) {   // 团购发起记录
@@ -54,6 +54,16 @@ class SmsGrouponBusiness extends BaseBusiness
 //                $grouponVo['orderStatusText'] = OmsOrderConstant::getText($vo['order']['status']);
 
                 // 商品信息
+                if ($vo['order'] && $vo['order']['goods_list']) {
+                    foreach ($vo['order']['goods_list'] as $v) {
+                        $grouponVo['goodsList'][] = [
+                            'id'            =>  $v['id'],
+                            'goodsName'     =>  $v['goods_name'],
+                            'number'        =>  $v['number'],
+                            'picUrl'        =>  $v['pic_url'],
+                        ];
+                    }
+                }
                 $couponList[] = $grouponVo;
             }
         }
@@ -85,7 +95,7 @@ class SmsGrouponBusiness extends BaseBusiness
             ['status', '<>', \App\Constants\SmsGrouponConstant::STATUS_NONE],
         ];
         $with = [
-            'order' =>  function($query) {
+            'order.goodsList' =>  function($query) {
                 $query->select('*');
             },
             'rule'  =>  function($query) {
@@ -113,7 +123,7 @@ class SmsGrouponBusiness extends BaseBusiness
             ['status', '<>', \App\Constants\SmsGrouponConstant::STATUS_NONE],
         ];
         $with = [
-            'order' =>  function($query) {
+            'order.goodsList' =>  function($query) {
                 $query->select('id','order_sn');
             },
             'rule'  =>  function($query) {
