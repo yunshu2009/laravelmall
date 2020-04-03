@@ -8,6 +8,7 @@ use App\Models\Mysql\SmsCouponUser;
 
 class SmsCouponUserBusiness extends BaseBusiness
 {
+    protected static $model = 'SmsCouponUser';
     public static $select = ['id', 'user_id', 'coupon_id', 'status', 'used_time', 'start_time', 'end_time', 'order_id'];
 
     public static function assignForRegister($userId)
@@ -67,16 +68,11 @@ class SmsCouponUserBusiness extends BaseBusiness
 
         $count = self::queryCountByCondition($condition);
         $page = CommonResult::formatPaged($validated['page'], $validated['limit'], $count);
-        $list = SmsCouponUser::query()
-                             ->with(['coupon'=>function($query) {
-                                 $query->select(['id', 'name', 'desc', 'tag', 'min', 'discount']);
-                             }])
-                             ->where($condition)
-                             ->orderBy($validated['sort'], $validated['order'])
-                             ->forPage($validated['page'], $validated['limit'])
-                             ->select(['coupon_id', 'start_time', 'end_time'])
-                             ->get()
-                             ->toArray();
+
+        $with = ['coupon'=>function($query) {
+            $query->select(['id', 'name', 'desc', 'tag', 'min', 'discount']);
+        }];
+        $list  = self::queryListByCondition($validated['page'], $validated['limit'], $condition, 'created_at', 'desc', $select=['coupon_id', 'start_time', 'end_time'], $with);
 
         // 格式化返回数据
         $couponList = [];
@@ -97,25 +93,5 @@ class SmsCouponUserBusiness extends BaseBusiness
         }
 
         return CommonResult::formatBody(array_merge(['list'=>$couponList], $page));
-    }
-
-    protected static function queryListByCondition($page, $limit, $condition=[], $sort='created_at', $order='desc')
-    {
-        return SmsCouponUser::query()
-                        ->where($condition)
-                        ->orderBy($sort, $order)
-                        ->forPage($page, $limit)
-                        ->get()
-                        ->toArray();
-    }
-
-    protected static function queryCountByCondition($condition)
-    {
-        $query = SmsCouponUser::query();
-        if ($condition) {
-            $query = $query->where($condition);
-        }
-
-        return $query->count();
     }
 }

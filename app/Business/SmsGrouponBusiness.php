@@ -18,7 +18,7 @@ class SmsGrouponBusiness extends BaseBusiness
         $limit = $validated['limit'] ?? 10;
 
         // 测试
-        $validated['userId'] = 7;
+//        $validated['userId'] = 7;
 
         if ($validated['showType'] == 0) {
             $res = self::queryMyGroupon($validated['userId'], $page, $limit);
