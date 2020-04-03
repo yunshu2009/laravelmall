@@ -9,6 +9,7 @@ use App\Models\Mysql\SmsCouponUser;
 
 class SmsCouponBusiness extends BaseBusiness
 {
+    protected static $model = 'SmsCoupon';
     protected static $select = ['id', 'name', 'desc', 'tag', 'days', 'start_time', 'end_time', 'discount', 'min'];
 
     // 不带where条件的查询
@@ -60,27 +61,5 @@ class SmsCouponBusiness extends BaseBusiness
                 ->where('type', SmsCouponConstant::TYPE_REGISTER)
                 ->get()
                 ->toArray();
-    }
-
-    protected static function queryListByCondition($page, $limit, $condition=[], $sort='created_at', $order='desc', $select='')
-    {
-        $select = $select ? $select : self::$select;
-        return SmsCoupon::query()
-                        ->where($condition)
-                        ->orderBy($sort, $order)
-                        ->forPage($page, $limit)
-                        ->select($select)
-                        ->get($select)
-                        ->toArray();
-    }
-
-    protected static function queryCountByCondition($condition)
-    {
-        $query = SmsCoupon::query();
-        if ($condition) {
-            $query = $query->where($condition);
-        }
-
-        return $query->count();
     }
 }
