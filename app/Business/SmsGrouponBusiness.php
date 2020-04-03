@@ -2,6 +2,7 @@
 
 namespace App\Business;
 
+use App\Constants\OmsOrderConstant;
 use App\Helper\CommonResult;
 use App\Models\Mysql\SmsGroupon;
 use Illuminate\Support\Arr;
@@ -51,7 +52,7 @@ class SmsGrouponBusiness extends BaseBusiness
                 $grouponVo['orderId'] = $vo['order']['id'];
                 $grouponVo['orderSn'] = $vo['order']['order_sn'];
                 $grouponVo['actualPrice'] = $vo['order']['actual_price'];
-//                $grouponVo['orderStatusText'] = OmsOrderConstant::getText($vo['order']['status']);
+                $grouponVo['orderStatusText'] = OmsOrderConstant::getText($vo['order']['order_status']);
 
                 // 商品信息
                 if ($vo['order'] && $vo['order']['goods_list']) {
