@@ -8,6 +8,13 @@ use App\Http\Controllers\Api\ApiController;
 
 class OmsCartController extends ApiController
 {
+    public function index()
+    {
+        $res = OmsCartBusiness::getList(['userId'=>$this->uid]);
+
+        return ResponseUtil::json($res);
+    }
+
     public function add()
     {
         $rules = [
@@ -32,9 +39,7 @@ class OmsCartController extends ApiController
      */
     public function goodsCount()
     {
-        $validated['userId'] = $this->uid;
-
-        $res = OmsCartBusiness::getGoodsCount($validated['userId']);
+        $res = OmsCartBusiness::getGoodsCount(['userId'=>$this->uid]);
 
         return ResponseUtil::json($res);
     }

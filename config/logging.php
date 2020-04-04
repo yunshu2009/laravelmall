@@ -100,6 +100,13 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        // 业务调试日志
+        'biz'   =>  [
+            'driver' => 'daily',
+            'level' => 'debug',
+            'path' => storage_path('logs/biz.log'),
+        ],
+
         // 调试sql
         'debugsql' => [
             'driver' => 'daily',

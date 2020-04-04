@@ -66,6 +66,8 @@ Route::prefix('v1')
                       Route::post('cart/add', 'OmsCartController@add')->name('oms_cart.add');
                       // 购物车数量
                       Route::post('cart/goodscount', 'OmsCartController@goodsCount')->name('oms_cart.goodscount');
+                      // 我的购物车列表
+                      Route::post('cart/index', 'OmsCartController@index')->name('oms_cart.index');
                       // 我的优惠券
                       Route::get('coupon/mylist', 'SmsCouponController@myList')->name('sms_coupon.mylist');
                       // 收藏列表

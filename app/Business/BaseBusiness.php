@@ -14,20 +14,27 @@ class BaseBusiness
 
     protected static function queryListByCondition($page, $limit, $condition=[], $sort='created_at', $order='desc', $select='', $with=[])
     {
-        $select = $select ? $select : self::$select;
+        $select = $select ? $select : static::$select;
 
         $model = 'App\\Models\\Mysql\\'.static::$model;
         $query = (new $model)->query();
+
         if ($with) {
             $query = $query->with($with);
         }
+        if ($condition) {
+            $query = $query->where($condition);
+        }
+        if ($sort && $order) {
+            $query = $query->orderBy($sort, $order);
+        }
+        if ($page && $limit) {
+            $query = $query->forPage($page, $limit);
+        }
 
-        return $query->where($condition)
-                     ->orderBy($sort, $order)
-                     ->forPage($page, $limit)
-                     ->select($select)
-                     ->get($select)
-                     ->toArray();
+        $obj = $query->select($select)->get($select);
+
+        return $obj ? $obj->toArray() : [];
     }
 
     protected static function queryCountByCondition($condition)

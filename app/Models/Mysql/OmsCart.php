@@ -18,4 +18,9 @@ class OmsCart extends BaseModel
         'select',
         'pic_url',
     ];
+
+    public function goods()
+    {
+        return $this->belongsTo(PmsGoods::class, 'goods_id', 'id');
+    }
 }

@@ -23,7 +23,7 @@ class CreateOmsCartTable extends Migration
             $table->decimal('price',10,2)->default(0.00)->comment('商品货品的价格');
             $table->smallInteger('number')->default(0)->comment('商品货品的数量');
             $table->string('specifications', '511')->comment('商品规格值列表，采用JSON数组格式');
-            $table->tinyInteger('select')->default(1)->comment('购物车中商品是否选择状态');
+            $table->tinyInteger('checked')->default(1)->comment('购物车中商品是否选择状态');
             $table->string('pic_url',255)->comment('商品图片或者商品货品图片');
             $table->tinyInteger('deleted')->default(0)->comment('逻辑删除');
             $table->timestamps();

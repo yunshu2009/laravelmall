@@ -5,11 +5,13 @@ namespace App\Business;
 use App\Constants\ResultCode;
 use App\Helper\CommonResult;
 use App\Models\Mysql\OmsCart;
+use Illuminate\Support\Facades\Log;
 
 class OmsCartBusiness extends BaseBusiness
 {
+    protected static $model = 'OmsCart';
     // 默认查询字段
-    protected static $select = [];
+    protected static $select = ['id', 'user_id', 'goods_id', 'goods_name', 'product_id', 'price', 'number', 'pic_url', 'checked'];
 
     public static function queryExist($goodsId, $productId, $userId)
     {
@@ -85,8 +87,54 @@ class OmsCartBusiness extends BaseBusiness
         return $goodsCount;
     }
 
-    public static function getGoodsCount($userId)
+    public static function getList(array $attributes)
     {
-        return CommonResult::formatBody(self::queryGoodsCount($userId));
+        $condition = [
+            'user_id'   =>  $attributes['userId']
+        ];
+        $with = [
+            'goods' =>  function($query) {
+                $query->select(['id','is_on_sale']);
+            }
+        ];
+        $list = self::queryListByCondition(0, 0, $condition, 'created_at', 'desc', '', $with);
+
+        $cartList = [
+            'cartList'  =>  [],
+            'cartTotal' =>  [],
+        ];
+        $goodsCount = 0;
+        $goodsAmount = 0;
+        $checkedGoodsCount = 0;
+        $checkedGoodsAmount = 0;
+
+        if ($list) {
+            foreach ($list as $vo) {
+                if ($vo['goods'] && $vo['goods']['is_on_sale']) {
+                    $cartList['cartList'][] = $vo;
+                    $goodsCount += $vo['number'];
+                    $goodsAmount = bcmul($goodsAmount, bcmul($vo['number'], $vo['price'], 2), 2);
+                    if ($vo['checked']) {
+                        $checkedGoodsCount += $vo['number'];
+                        $checkedGoodsAmount = bcmul($checkedGoodsAmount, bcmul($vo['number'], $vo['price'], 2), 2);
+                    }
+                } else {
+                    OmsCart::where('id', $vo['id'])->delete();
+                    Log::channel('biz')->debug("系统自动删除失效购物车商品 goodsId=" . $vo['goods_id'] . " productId=" . $vo['product_id']);
+                }
+            }
+        }
+
+        $cartList['cartTotal']['goodsCount'] = $goodsCount;
+        $cartList['cartTotal']['checkedGoodsCount'] = $checkedGoodsCount;
+        $cartList['cartTotal']['goodsAmount'] = $goodsAmount;
+        $cartList['cartTotal']['checkedGoodsAmount'] = $checkedGoodsAmount;
+
+        return CommonResult::formatBody($cartList);
+    }
+
+    public static function getGoodsCount(array $attributes)
+    {
+        return CommonResult::formatBody(self::queryGoodsCount($attributes['userId']));
     }
 }
