@@ -2,8 +2,6 @@
 
 namespace App\Constants;
 
-use phpDocumentor\Reflection\Types\Self_;
-
 class ResultCode
 {
     // 通用错误码
