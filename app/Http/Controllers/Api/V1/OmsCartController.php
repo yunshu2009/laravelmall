@@ -26,4 +26,16 @@ class OmsCartController extends ApiController
 
         return ResponseUtil::json($res);
     }
+
+    /**
+     * 详情页商品数量
+     */
+    public function goodsCount()
+    {
+        $validated['userId'] = $this->uid;
+
+        $res = OmsCartBusiness::getGoodsCount($validated['userId']);
+
+        return ResponseUtil::json($res);
+    }
 }

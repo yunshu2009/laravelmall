@@ -67,13 +67,13 @@ class OmsCartBusiness extends BaseBusiness
             OmsCart::create($cart);
         }
 
-       $goodsCount = self::goodsCount($attributes['userId']);
+       $goodsCount = self::queryGoodsCount($attributes['userId']);
 
         return CommonResult::formatBody($goodsCount);
     }
 
     // 获取购物车商品的总数量
-    public static function goodsCount($userId)
+    public static function queryGoodsCount($userId)
     {
         $goodsCount = 0;
         $cartList = OmsCart::where('user_id', $userId)->get()->toArray();
@@ -83,5 +83,10 @@ class OmsCartBusiness extends BaseBusiness
         }
 
         return $goodsCount;
+    }
+
+    public static function getGoodsCount($userId)
+    {
+        return CommonResult::formatBody(self::queryGoodsCount($userId));
     }
 }
