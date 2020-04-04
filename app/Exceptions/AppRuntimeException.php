@@ -56,7 +56,13 @@ class AppRuntimeException extends RuntimeException implements HttpExceptionInter
 
     public static function render(Request $request, self $exception)
     {
-        return $request->expectsJson() ? self::invalidJson($exception) : self::invalid($request, $exception);
+        $isApiRequest = $request->is(['api/*'])  || $request->expectsJson();
+
+        if ($isApiRequest) {
+            return self::invalidJson($exception);
+        }
+
+        return self::invalid($request, $exception);
     }
 
 

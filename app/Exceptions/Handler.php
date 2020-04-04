@@ -60,6 +60,10 @@ class Handler extends ExceptionHandler
         if ($exception instanceof AppRuntimeException) {
             return AppRuntimeException::render(request(), $exception);
         } else {
+            if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+                return AppRuntimeException::render(request(), new AppRuntimeException(ResultCode::NOT_FOUND, '资源不存在'));
+            }
+
             $message = '未知系统错误,异常类型：'.gettype($exception).','.$exception->getMessage().','.get_class($exception).','.$exception->getLine().','.$exception->getTraceAsString();
 
             Log::channel('syserror')->error(TRACE_ID, ['message'=>$message]);

@@ -72,7 +72,7 @@ class SmsCouponUserBusiness extends BaseBusiness
         $with = ['coupon'=>function($query) {
             $query->select(['id', 'name', 'desc', 'tag', 'min', 'discount']);
         }];
-        $list  = self::queryListByCondition($validated['page'], $validated['limit'], $condition, 'created_at', 'desc', $select=['coupon_id', 'start_time', 'end_time'], $with);
+        $list  = self::queryListByCondition($validated['page'], $validated['limit'], $condition, 'created_at', 'desc', ['coupon_id', 'start_time', 'end_time'], $with);
 
         // 格式化返回数据
         $couponList = [];

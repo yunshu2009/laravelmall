@@ -11,6 +11,7 @@ class ResultCode
     const BAD_REQUEST = 400;
     const UNAUTHORIZED = 401;
     const FORBIDDEN = 403;
+    const NOT_FOUND = 404;
     const FAILED = 500;    // 应用错误，不好明确归类的
     const UPDATE_DB_ERROR = 501;  // 更新数据失败
     const SYSERROR = 999;   // 未知错误，致命错误。如：数据库错误
@@ -68,6 +69,7 @@ class ResultCode
         self::SUCCESS   =>  '操作成功。',
         self::BAD_REQUEST    =>  '参数错误。',
         self::UNAUTHORIZED  =>  '暂未登录或token已经过期。',
+        self::NOT_FOUND =>  '资源不存在',
         self::FORBIDDEN =>  '没有相关权限。',
         self::FAILED    =>  '发生错误。',
         self::SYSERROR  =>  '系统错误。',
