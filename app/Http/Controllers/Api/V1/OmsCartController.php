@@ -64,4 +64,21 @@ class OmsCartController extends ApiController
 
         return ResponseUtil::json($res);
     }
+
+    public function delete()
+    {
+        $rules = [
+            'ids'        => 'required|min:1',
+        ];
+
+        if ($error = $this->validateInput($rules)) {
+            return $error;
+        }
+
+        $validated = $this->validated;
+        $validated['userId'] = $this->uid;
+        $res = OmsCartBusiness::delete($validated);
+
+        return ResponseUtil::json($res);
+    }
 }

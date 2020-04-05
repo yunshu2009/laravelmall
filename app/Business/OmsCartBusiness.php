@@ -176,4 +176,20 @@ class OmsCartBusiness extends BaseBusiness
 
         return CommonResult::formatBody();
     }
+
+    public static function delete(array $attributes)
+    {
+        $carts = OmsCart::query()
+            ->whereIn('id', $attributes['ids'])
+            ->where('user_id', $attributes['userId'])
+            ->first();
+
+        if (! $carts) {
+            return CommonResult::formatError(ResultCode::NOT_FOUND);
+        }
+
+        OmsCart::destroy($attributes['ids']);
+
+        return CommonResult::formatBody();
+    }
 }
