@@ -137,4 +137,43 @@ class OmsCartBusiness extends BaseBusiness
     {
         return CommonResult::formatBody(self::queryGoodsCount($attributes['userId']));
     }
+
+    public static function update(array $attributes)
+    {
+        $cart = OmsCart::query()
+            ->with(['goods'=>function($query) {
+                $query->select(['id', 'is_on_sale']);
+            }])
+            ->where('user_id', $attributes['userId'])
+            ->where('id', $attributes['id'])
+            ->first();
+        if (! $cart) {
+            return CommonResult::formatError(ResultCode::BAD_REQUEST);
+        }
+
+        if ($attributes['productId'] != $cart['product_id'] || $attributes['goodsId'] != $cart['goods_id']) {
+            return CommonResult::formatError(ResultCode::BAD_REQUEST);
+        }
+
+        if (! $cart['goods']['is_on_sale']) {
+            return CommonResult::formatError(ResultCode::GOODS_UNSHELVE, '商品已下架');
+        }
+
+        // 检查库存
+        $hasStock = PmsGoodsProductBusiness::checkStock($cart['product_id'], $attributes['number']);
+        if (! $hasStock) {
+            return CommonResult::formatError(ResultCode::GOODS_UNSHELVE, '库存不足');
+        }
+
+        // 修改商品信息
+         $res = OmsCart::where('id', $cart['id'])->update([
+             'number'   =>  $attributes['number']
+         ]);
+
+        if (! $res) {
+            return CommonResult::formatError(ResultCode::UPDATE_DB_ERROR);
+        }
+
+        return CommonResult::formatBody();
+    }
 }

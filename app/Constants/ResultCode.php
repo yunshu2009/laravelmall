@@ -71,6 +71,7 @@ class ResultCode
         self::FORBIDDEN =>  '没有相关权限。',
         self::FAILED    =>  '发生错误。',
         self::SYSERROR  =>  '系统错误。',
+        self::UPDATE_DB_ERROR   =>  '修改失败',
 
         self::AUTH_NAME_REGISTERED      =>  '用户名已经注册。',
         self::AUTH_MOBILE_REGISTERED    =>  '手机号已经注册。',

@@ -18,4 +18,15 @@ class PmsGoodsProductBusiness extends BaseBusiness
     {
         return PmsGoodsProduct::query()->where('id',$goodsId)->first()->toArray();
     }
+
+    public static function checkStock($productId, $number)
+    {
+        $product = PmsGoodsProduct::query()
+                       ->where('id', $productId)
+                       ->where('number', '>=', $number)
+                       ->select(['id'])
+                       ->first();
+
+        return $product ? true : false;
+    }
 }

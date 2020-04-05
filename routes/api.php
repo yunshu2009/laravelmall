@@ -64,6 +64,8 @@ Route::prefix('v1')
                       Route::get('order/list', 'OmsOrderController@index')->name('order.index');
                       // 添加至购物车
                       Route::post('cart/add', 'OmsCartController@add')->name('oms_cart.add');
+                      // 修改购物车
+                      Route::post('cart/update', 'OmsCartController@update')->name('oms_cart.update');
                       // 购物车数量
                       Route::post('cart/goodscount', 'OmsCartController@goodsCount')->name('oms_cart.goodscount');
                       // 我的购物车列表
