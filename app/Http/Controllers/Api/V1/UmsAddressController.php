@@ -17,6 +17,19 @@ class UmsAddressController extends ApiController
 
     public function delete()
     {
+        $rules = [
+            'id'            => 'required|integer|min:1',
+        ];
 
+        if ($error = $this->validateInput($rules)) {
+            return $error;
+        }
+
+        $validated = $this->validated;
+        $validated['userId'] = $this->uid;
+
+        $res = UmsAddressBusiness::delete($validated);
+
+        return ResponseUtil::json($res);
     }
 }

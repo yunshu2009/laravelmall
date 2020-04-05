@@ -69,11 +69,13 @@ Route::prefix('v1')
                       // 购物车数量
                       Route::post('cart/goodscount', 'OmsCartController@goodsCount')->name('oms_cart.goodscount');
                       // 我的购物车列表
-                      Route::post('cart/index', 'OmsCartController@index')->name('oms_cart.index');
+                      Route::get('cart/index', 'OmsCartController@index')->name('oms_cart.index');
                       // 删除购物车
                       Route::post('cart/delete', 'OmsCartController@delete')->name('oms_cart.delete');
                       // 我的地址
                       Route::get('address/list', 'UmsAddressController@index')->name('ums_address.index');
+                      // 删除地址
+                      Route::post('address/delete', 'UmsAddressController@delete')->name('ums_address.delete');
                       // 我的优惠券
                       Route::get('coupon/mylist', 'SmsCouponController@myList')->name('sms_coupon.mylist');
                       // 收藏列表
