@@ -61,7 +61,7 @@ class Handler extends ExceptionHandler
             return AppRuntimeException::render(request(), $exception);
         } else {
             if ($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-                return AppRuntimeException::render(request(), new AppRuntimeException(ResultCode::NOT_FOUND, '资源不存在'));
+                return AppRuntimeException::render(request(), new AppRuntimeException(ResultCode::NOT_FOUND, '请求非法'));
             } elseif ($exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
                 return AppRuntimeException::render(request(), new AppRuntimeException(ResultCode::NOT_FOUND, '指定 ' . class_basename($exception->getModel()) . ' 记录不存在'));
             } elseif ($exception instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
