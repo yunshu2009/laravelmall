@@ -21,7 +21,7 @@ $factory->define(UmsAddress::class, function (Faker $faker) {
         'name'           => $faker->name,
         'province'       => $address[0],
         'city'           => $address[1],
-        'country'        => $address[2],
+        'county'        => $address[2],
         'address_detail' => sprintf('第%d街道第%d号', $faker->randomNumber(2),
             $faker->randomNumber(3)),
         'area_code'      => $faker->postcode,

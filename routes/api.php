@@ -74,6 +74,8 @@ Route::prefix('v1')
                       Route::post('cart/delete', 'OmsCartController@delete')->name('oms_cart.delete');
                       // 我的地址
                       Route::get('address/list', 'UmsAddressController@index')->name('ums_address.index');
+                      // 修改地址
+                      Route::post('address/save', 'UmsAddressController@save')->name('ums_address.save');
                       // 删除地址
                       Route::post('address/delete', 'UmsAddressController@delete')->name('ums_address.delete');
                       // 我的优惠券

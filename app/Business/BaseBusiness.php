@@ -2,6 +2,8 @@
 
 namespace App\Business;
 
+use Illuminate\Support\Str;
+
 class BaseBusiness
 {
     protected static $model;
@@ -46,5 +48,28 @@ class BaseBusiness
         }
 
         return $query->count();
+    }
+
+    /**
+     * 将输入转为蛇型变量命名风格
+     * @param array $arr
+     *
+     * @return array
+     */
+    protected static function transformInput(array $arr) : array
+    {
+        $newArr = [];
+        foreach ($arr as  $k=>$v){
+            if (is_string($k)) {
+                $k = Str::snake($k);
+            }
+            if(is_array($v)){
+                $v = self::transformInput($v);
+            }
+
+            $newArr[$k] = $v;
+        }
+
+        return $newArr;
     }
 }

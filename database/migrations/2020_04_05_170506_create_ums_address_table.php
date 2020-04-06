@@ -19,10 +19,10 @@ class CreateUmsAddressTable extends Migration
             $table->bigInteger('user_id')->comment('用户表的用户ID');
             $table->string('province', 31)->comment('行政区域表的省ID');
             $table->string('city',31)->comment('行政区域表的市ID');
-            $table->string('country',31)->comment('行政区域表的区县ID');
+            $table->string('county',31)->comment('行政区域表的区县ID');
             $table->string('address_detail',127)->comment('详细收货地址');
             $table->char('area_code',6)->comment('地区编码');
-            $table->char('postal_code',6)->comment('邮政编码');
+            $table->char('postal_code',6)->nullable()->comment('邮政编码');
             $table->string('tel',20)->comment('手机号码');
             $table->tinyInteger('is_default')->comment('是否默认地址');
             $table->tinyInteger('deleted')->default(0)->comment('逻辑删除');
