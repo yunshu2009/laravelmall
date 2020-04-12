@@ -37,6 +37,7 @@ class ResponseUtil
             ]);
 
             $body['traceid'] = TRACE_ID;
+            $body['elapsed'] = round(microtime(true) - LARAVEL_START, 3); // 返回耗时（秒数）
         }
 
         if ($body['errno'] != ResultCode::SUCCESS) { // 有错误时

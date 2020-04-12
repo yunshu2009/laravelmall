@@ -132,3 +132,22 @@ if (!function_exists('request_sn')) {
         return date('Ymd').'_'.\Ramsey\Uuid\Uuid::uuid1()->getHex();
     }
 }
+
+if (!function_exists('clear_null')) {
+    function clear_null(&$data=[])
+    {
+        if ($data === null || $data === false) {
+            $data = '';
+        }
+
+        if (is_array($data) && ! empty($data)) {
+            foreach ($data as &$v) {
+                if ($v === null || $v === false) {
+                    $v = '';
+                } else if (is_array($v)) {
+                    clear_null($v);
+                }
+            }
+        }
+    }
+}
