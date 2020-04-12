@@ -9,9 +9,6 @@
 
 define('LARAVEL_START', microtime(true));
 
-// 全局调试ID
-define('TRACE_ID', uniqid());
-
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader

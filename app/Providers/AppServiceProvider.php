@@ -26,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // 全局请求ID
+        define('TRACE_ID', request_sn());
+
         \App\Helper\SystemConfig::load();
 
         $this->registerValidator();

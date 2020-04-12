@@ -124,5 +124,11 @@ if (! function_exists('ip')) {
 
         return $ip2long ? ip2long($ip) : $ip;
     }
+}
 
+if (!function_exists('request_sn')) {
+    function request_sn()
+    {
+        return date('Ymd').'_'.\Ramsey\Uuid\Uuid::uuid1()->getHex();
+    }
 }
