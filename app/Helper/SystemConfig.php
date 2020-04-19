@@ -12,8 +12,12 @@ class SystemConfig
     {
         $cacheConfigs = Cache::get(CacheKey::SYSTEM_CONFIGS);
         if (! $cacheConfigs) {
-            $configs = SystemConfigBusiness::queryAll();
-            Cache::forever(CacheKey::SYSTEM_CONFIGS, json_encode($configs));
+            try {
+                $configs = SystemConfigBusiness::queryAll();
+                Cache::forever(CacheKey::SYSTEM_CONFIGS, json_encode($configs));
+            } catch (\Throwable $e) {
+                $configs = [];
+            }
         } else {
             $configs = json_decode($cacheConfigs, true);
         }
