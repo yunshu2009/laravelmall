@@ -81,4 +81,29 @@ class OmsCartController extends ApiController
 
         return ResponseUtil::json($res);
     }
+
+    /**
+     * 购物车下单
+     */
+    public function checkout()
+    {
+        $rules = [
+            'cartId'            => 'required|integer|min:1',
+            'addressId'         => 'required|integer|min:0',
+            'couponId'          => 'required|integer|min:0',
+            'userCouponId'      => 'required|integer|min:0',
+            'grouponRulesId'    => 'required|integer|min:1',
+        ];
+
+        if ($error = $this->validateInput($rules)) {
+            return $error;
+        }
+
+        $validated = $this->validated;
+        $validated['userId'] = $this->uid;
+
+        $res = OmsCartBusiness::checkout($validated);
+
+        return ResponseUtil::json($res);
+    }
 }

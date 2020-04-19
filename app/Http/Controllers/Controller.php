@@ -35,7 +35,7 @@ class Controller extends BaseController
             return ResponseUtil::json($body);
         } else {
             $this->validated = array_intersect_key($requests, $rules);
-            $this->validated = $requests ;
+            $this->validated = $requests;
             return false;
         }
     }

@@ -192,4 +192,31 @@ class OmsCartBusiness extends BaseBusiness
 
         return CommonResult::formatBody();
     }
+
+    public static function checkout(array $attributes)
+    {
+        if ($attributes['addressId']) {
+            // 查询
+            $address = UmsAddressBusiness::queryAddressById($attributes['userId'], $attributes['addressId']);
+
+            if ($address) {
+                return CommonResult::formatError(ResultCode::BAD_REQUEST);
+            }
+
+            $addressId = $attributes['addressId'];
+        } else {
+            $addressId = UmsAddressBusiness::queryDefaultAddressId($attributes['userId']);
+        }
+
+        // 获取团购价格
+        $grouponPrice = 0;
+        $grouponRules = SmsGrouponRulesBusiness::queryById($addressId['grouponRulesId']);
+        if (! $grouponRules) {
+            $grouponPrice = $grouponRules['discount'];
+        }
+
+        // 商品价格
+        $checkedGoodsList = [];
+
+    }
 }

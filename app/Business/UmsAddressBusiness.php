@@ -79,4 +79,21 @@ class UmsAddressBusiness extends BaseBusiness
     {
         return UmsAddress::where('user_id', $userId)->update(['is_default'=>0]);
     }
+
+    public static function queryDefaultAddressId($userId)
+    {
+        $obj = UmsAddress::query()
+                    ->where('user_id', $userId)
+                    ->where('is_default', 0)
+                    ->first();
+
+        return is_null($obj) ? 0 : $obj->id;
+    }
+
+    public static function queryAddressById($userId, $addressId)
+    {
+        return UmsAddress::query()->where('user_id', $userId)
+                                  ->where('address_id', $addressId)
+                                  ->first();
+    }
 }

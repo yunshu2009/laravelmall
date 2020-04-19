@@ -14,6 +14,14 @@ class BaseBusiness
         self::$select = $select;
     }
 
+    public static function queryById($id)
+    {
+        $model = 'App\\Models\\Mysql\\'.static::$model;
+        $query = (new $model)->query();
+
+        return $query->where('id', $id)->first();
+    }
+
     protected static function queryListByCondition($page, $limit, $condition=[], $sort='created_at', $order='desc', $select='', $with=[])
     {
         $select = $select ? $select : static::$select;
