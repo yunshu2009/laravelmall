@@ -88,6 +88,8 @@ Route::prefix('v1')
                       Route::get('groupon/my', 'SmsGrouponController@myList')->name('sms_groupon.my');
                       // 关于
                       Route::get('home/about', 'HomeController@about')->name('home.about');
+                      // 意见反馈
+                      Route::post('feedback', 'FeedbackController@save')->name('feedback.save');
                   });
               });
          //

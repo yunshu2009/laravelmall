@@ -21,15 +21,18 @@ class Controller extends BaseController
 
     /**
      * 验证输入信息
+     *
      * @param $rules
+     * @param array $messages
+     * @param array $customAttributes
      *
      * @return bool|\Illuminate\Http\JsonResponse
      */
-    public function validateInput($rules)
+    public function validateInput($rules, array $messages = [], array $customAttributes = [])
     {
         $requests = $this->request->all();
 
-        $validator = Validator::make($requests, $rules);
+        $validator = Validator::make($requests, $rules, $messages, $customAttributes);
         if ($validator->fails()) {
             $body = CommonResult::formatError(ResultCode::BAD_REQUEST, $validator->messages()->first());
             return ResponseUtil::json($body);
