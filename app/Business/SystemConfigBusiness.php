@@ -25,14 +25,16 @@ class SystemConfigBusiness extends BaseBusiness
     public static function getConfigs(array $attributes)
     {
         if (isset($attributes['type'])) {
-            $fields = [
-                'mall.name',
-                'mall.address',
-                'mall.phone',
-                'mall.qq',
-                'mall.longitude',
-                'mall.latitude'
-            ];
+            if ($attributes['type'] == 'about_info') {
+                $fields = [
+                    'mall.name',
+                    'mall.address',
+                    'mall.phone',
+                    'mall.qq',
+                    'mall.longitude',
+                    'mall.latitude'
+                ];
+            }
          }
         $configs = [];
         $list = self::queryAll();
