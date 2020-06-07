@@ -90,6 +90,8 @@ Route::prefix('v1')
                       Route::get('home/about', 'HomeController@about')->name('home.about');
                       // 意见反馈
                       Route::post('feedback', 'FeedbackController@save')->name('feedback.save');
+                      // 帮助中心
+                      Route::get('issue/list', 'CmsIssueController@index')->name('cms_issue.index');
                   });
               });
          //

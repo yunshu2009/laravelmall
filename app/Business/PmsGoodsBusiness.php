@@ -102,7 +102,7 @@ class PmsGoodsBusiness extends BaseBusiness
         $ret = [];
         $ret['info'] = Arr::except($goods, ['specification_list', 'attribute', 'product_list']);
         $ret['attribute'] = $goods['attribute'];
-        $ret['issue'] = CmsIssueBussiness::getList(1, 4);
+        $ret['issue'] = CmsIssueBussiness::queryList(1, 4);
         $ret['share'] = config('mall.wx_share');
         $ret['shareUrl'] = $goods['share_url'];
         $ret['userHasCollect'] = CmsCollectBusiness::count($attributes['userId'], $goods['id']);
