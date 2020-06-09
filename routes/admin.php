@@ -30,7 +30,7 @@ Route::prefix('v1')
                         });
                         // 登录后可以访问的接口
                         Route::middleware(['token.auth', 'xss'])->group(function() {
-                            //
+                            Route::get('ad/list', 'CmsAdController@index')->name('ad.list');
                         });
                     });
          //
