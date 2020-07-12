@@ -47,7 +47,7 @@ class BaseBusiness
         return $obj ? $obj->toArray() : [];
     }
 
-    protected static function queryCountByCondition($condition)
+    public static function queryCountByCondition($condition=[])
     {
         $model = 'App\\Models\\Mysql\\'.static::$model;
         $query = (new $model)->query();

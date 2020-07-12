@@ -30,7 +30,9 @@ Route::prefix('v1')
                         });
                         // 登录后可以访问的接口
                         Route::middleware(['token.auth', 'xss'])->group(function() {
-                            Route::get('ad/list', 'CmsAdController@index')->name('ad.list');
+                            Route::get('/dashboard', 'DashboardController@index')->name('dshboard.index');
+                            Route::get('ad/list', 'CmsAdController@index')->name('cms_ad.index');
+                            Route::get('address/list', 'UmsAddressController@index')->name('ad.ums_address.index');
                         });
                     });
          //

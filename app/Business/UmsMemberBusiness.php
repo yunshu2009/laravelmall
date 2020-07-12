@@ -168,4 +168,5 @@ class UmsMemberBusiness extends BaseBusiness
     {
         return 'username';
     }
+
 }

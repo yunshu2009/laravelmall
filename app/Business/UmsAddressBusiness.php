@@ -17,9 +17,13 @@ class UmsAddressBusiness extends BaseBusiness
         $attributes['page'] = $attributes['page'] ?? 1;
         $attributes['limit'] = $attributes['limit'] ?? 10;
 
-        $condition = [
-            'user_id'   =>  $attributes['userId']
-        ];
+        $condition = [];
+        if (isset($attributes['userId'])) {
+            $condition[] = ['user_id', '=', $attributes['userId']];
+        }
+        if (isset($attributes['name'])) {
+            $condition[] = ['name', 'like', '%'.$attributes['name'].'%'];
+        }
         $list = self::queryListByCondition($attributes['page'], $attributes['limit'], $condition, 'is_default', 'desc');
         $total = self::queryCountByCondition($condition);
 

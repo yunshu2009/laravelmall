@@ -217,4 +217,12 @@ class PmsGoodsBusiness extends BaseBusiness
 
         return CommonResult::formatBody($count);
     }
+
+    /*
+     * 获取所有物品总数，包括在售的和下架的，但是不包括已删除的商品
+     */
+    public static function count()
+    {
+        return parent::queryCountByCondition();
+    }
 }
