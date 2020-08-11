@@ -32,6 +32,7 @@ Route::prefix('v1')
                         Route::middleware(['token.auth', 'xss'])->group(function() {
                             Route::get('/dashboard', 'DashboardController@index')->name('dshboard.index');
                             Route::get('ad/list', 'CmsAdController@index')->name('cms_ad.index');
+                            Route::get('brands', 'PmsBrandController@index')->name('pms_brand.index');
                             Route::get('address/list', 'UmsAddressController@index')->name('ad.ums_address.index');
                         });
                     });
