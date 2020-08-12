@@ -19,7 +19,22 @@ class BaseBusiness
         $model = 'App\\Models\\Mysql\\'.static::$model;
         $query = (new $model)->query();
 
-        return $query->where('id', $id)->first();
+        $res = $query->where('id', $id)->first();
+
+        return is_null($res) ? [] : $res->toArray();
+    }
+
+    public static function destroy($id)
+    {
+        $model = 'App\\Models\\Mysql\\'.static::$model;
+
+        return call_user_func([$model, 'destroy'], $id);
+    }
+
+    public static function create($data)
+    {
+        $model = 'App\\Models\\Mysql\\'.static::$model;
+        return call_user_func([$model, 'create']);
     }
 
     protected static function queryListByCondition($page, $limit, $condition=[], $sort='created_at', $order='desc', $select='', $with=[])

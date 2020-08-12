@@ -32,8 +32,13 @@ Route::prefix('v1')
                         Route::middleware(['token.auth', 'xss'])->group(function() {
                             Route::get('/dashboard', 'DashboardController@index')->name('dshboard.index');
                             Route::get('ad/list', 'CmsAdController@index')->name('cms_ad.index');
-                            Route::get('brands', 'PmsBrandController@index')->name('pms_brand.index');
                             Route::get('address/list', 'UmsAddressController@index')->name('ad.ums_address.index');
+
+                            // 品牌
+                            Route::post('brands/create', 'PmsBrandController@index')->name('pms_brand.index');
+                            Route::get('brands/show', 'PmsBrandController@show')->name('pms_brand.show');
+                            Route::post('brands/destroy', 'PmsBrandController@destroy')->name('pms_brand.destroy');
+                            Route::get('brands', 'PmsBrandController@index')->name('pms_brand.index');
                         });
                     });
          //
