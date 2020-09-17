@@ -130,20 +130,20 @@ class Token
                     // 超过1天
                     if (property_exists($payload, 'exp')) {
                         if ((time()+config('token.ttl')*60-$payload->exp) > config('token.refresh_ttl')*60) {
-                            return self::new_token($payload);
+                            return self::newToken($payload);
                         }
                     }
 
                     // 版本号不匹配
                     if (property_exists($payload, 'ver')) {
                         if (version_compare(config('token.ver'), $payload->ver) != 0) {
-                            return self::new_token($payload);
+                            return self::newToken($payload);
                         }
                     }
 
                     // 没有版本号
                     if (!property_exists($payload, 'ver')) {
-                        return self::new_token($payload);
+                        return self::newToken($payload);
                     }
                 }
             }
@@ -152,33 +152,12 @@ class Token
         return false;
     }
 
-    private static function new_token($payload)
+    private static function newToken($payload)
     {
         return self::encode([
             'uid' => $payload->uid,
             'ver' => config('token.ver')
         ]);
-    }
-
-    private static function str_mix($domain, $uuid)
-    {
-        $uuid = explode('-', $uuid);
-        $domain = explode('.', $domain);
-        $mixed = array_merge($uuid, $domain);
-        arsort($mixed);
-        return implode('-', $mixed);
-    }
-
-    private static function parse_domain($url)
-    {
-        $data = parse_url($url);
-        $host = $data['host'];
-
-        if (preg_match('/^www.*$/', $host)) {
-            return str_replace('www.', '', $host);
-        }
-
-        return $host;
     }
 
     /**
