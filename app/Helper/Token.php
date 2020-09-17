@@ -2,14 +2,6 @@
 
 namespace App\Helper;
 
-use \DomainException;
-use \InvalidArgumentException;
-use \UnexpectedValueException;
-use \DateTime;
-use Cache;
-use App\Helper\Header;
-use Log;
-
 class Token
 {
 
@@ -28,25 +20,8 @@ class Token
     );
 
     /**
-     * Decodes a JWT string into a PHP object.
-     *
-     * @param string            $jwt            The JWT
-     * @param string|array|null $key            The key, or map of keys.
-     *                                          If the algorithm used is asymmetric, this is the public key
-     * @param array             $allowed_algs   List of supported verification algorithms
-     *                                          Supported algorithms are 'HS256', 'HS384', 'HS512' and 'RS256'
-     *
-     * @return object The JWT's payload as a PHP object
-     *
-     * @throws DomainException              Algorithm was not provided
-     * @throws UnexpectedValueException     Provided JWT was invalid
-     * @throws SignatureInvalidException    Provided JWT was invalid because the signature verification failed
-     * @throws BeforeValidException         Provided JWT is trying to be used before it's eligible as defined by 'nbf'
-     * @throws BeforeValidException         Provided JWT is trying to be used before it's been created as defined by 'iat'
-     * @throws ExpiredException             Provided JWT has since expired, as defined by the 'exp' claim
-     *
-     * @uses jsonDecode
-     * @uses urlsafeB64Decode
+     * @param $jwt string
+     * @return bool|int|object|null
      */
     public static function decode($jwt)
     {
@@ -221,7 +196,7 @@ class Token
      * @uses jsonEncode
      * @uses urlsafeB64Encode
      */
-    public static function encode($payload, $keyId = null, $head = null)
+    public static function encode(array $payload, $keyId = null, $head = null)
     {
         $key = config('token.secret');
         $alg = config('token.alg');
@@ -253,16 +228,10 @@ class Token
     }
 
     /**
-     * Sign a string with a given key and algorithm.
-     *
-     * @param string            $msg    The message to sign
-     * @param string|resource   $key    The secret key
-     * @param string            $alg    The signing algorithm.
-     *                                  Supported algorithms are 'HS256', 'HS384', 'HS512' and 'RS256'
-     *
-     * @return string An encrypted message
-     *
-     * @throws DomainException Unsupported algorithm was specified
+     * @param $msg
+     * @param $key
+     * @param string $alg
+     * @return bool|string
      */
     public static function sign($msg, $key, $alg = 'HS256')
     {
@@ -285,17 +254,11 @@ class Token
     }
 
     /**
-     * Verify a signature with the message, key and method. Not all methods
-     * are symmetric, so we must have a separate verify and sign method.
-     *
-     * @param string            $msg        The original message (header and body)
-     * @param string            $signature  The original signature
-     * @param string|resource   $key        For HS*, a string key works. for RS*, must be a resource of an openssl public key
-     * @param string            $alg        The algorithm
-     *
+     * @param $msg
+     * @param $signature
+     * @param $key
+     * @param $alg
      * @return bool
-     *
-     * @throws DomainException Invalid Algorithm or OpenSSL failure
      */
     private static function verify($msg, $signature, $key, $alg)
     {
@@ -331,13 +294,8 @@ class Token
     }
 
     /**
-     * Decode a JSON string into a PHP object.
-     *
-     * @param string $input JSON string
-     *
-     * @return object Object representation of JSON string
-     *
-     * @throws DomainException Provided string was invalid JSON
+     * @param $input
+     * @return bool|mixed|null
      */
     public static function jsonDecode($input)
     {
@@ -366,13 +324,8 @@ class Token
     }
 
     /**
-     * Encode a PHP object into a JSON string.
-     *
-     * @param object|array $input A PHP object or array
-     *
-     * @return string JSON representation of the PHP object or array
-     *
-     * @throws DomainException Provided object could not be encoded to valid JSON
+     * @param $input
+     * @return bool|false|string
      */
     public static function jsonEncode($input)
     {
@@ -415,11 +368,8 @@ class Token
     }
 
     /**
-     * Helper method to create a JSON error.
-     *
-     * @param int $errno An error number from json_last_error()
-     *
-     * @return void
+     * @param $errno
+     * @return bool
      */
     private static function handleJsonError($errno)
     {
@@ -449,11 +399,11 @@ class Token
 
     private static function setPlatform($uid)
     {
-        $platform = Header::getUserAgent('Platform');
-        $key = "platform:{$uid}";
-        // cache
-        Cache::put($key, $platform, 0);
-        return $platform;
+//        $platform = Header::getUserAgent('Platform');
+//        $key = "platform:{$uid}";
+//        // cache
+//        \Cache::put($key, $platform, 0);
+//        return $platform;
     }
 
     private static function verifyPlatform($uid)
